@@ -613,52 +613,115 @@ function Solution() {
   useEffect(() => {
     if (prefersReducedMotion) return
     const ctx = gsap.context(() => {
-      gsap.fromTo('.sol-card',
-        { y: 36, opacity: 0 },
-        { scrollTrigger: { trigger: ref.current, start: 'top 85%', once: true }, y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out', immediateRender: false }
+      gsap.fromTo('.sol-row',
+        { x: -30, opacity: 0 },
+        { scrollTrigger: { trigger: ref.current, start: 'top 80%', once: true }, x: 0, opacity: 1, duration: 0.7, stagger: 0.12, ease: 'power3.out', immediateRender: false }
+      )
+      gsap.fromTo('.sol-right',
+        { x: 30, opacity: 0 },
+        { scrollTrigger: { trigger: ref.current, start: 'top 80%', once: true }, x: 0, opacity: 1, duration: 0.8, ease: 'power3.out', immediateRender: false }
       )
     }, ref)
     return () => ctx.revert()
   }, [])
 
-  const cards = [
-    {
-      icon: <Megaphone className="h-6 w-6 text-primary" strokeWidth={2.2} />,
-      title: 'Part 1: Facebook Ads That Find the Jobs',
-      text: 'We run targeted ads in your service area aimed at homeowners actively looking for roofing work — storm damage, replacements, leaks. Hot leads, not cold lists.',
-    },
-    {
-      icon: <Phone className="h-6 w-6 text-primary" strokeWidth={2.2} />,
-      title: 'Part 2: 30-Second AI Callback',
-      text: 'The second a lead fills out a form, our AI calls them back — within 30 seconds. It qualifies the job, gets the details, and books the estimate directly on your calendar.',
-    },
-    {
-      icon: <Star className="h-6 w-6 text-primary" strokeWidth={2.2} />,
-      title: 'Exclusive Leads. Only Yours.',
-      text: 'Every lead we generate is exclusive to your business. We don\'t sell the same homeowner to three roofers. You\'re not bidding against a competitor on your own lead.',
-    },
-  ]
-
   return (
     <section id="solution" ref={ref} className="py-24 sm:py-32 bg-background border-t border-divider" style={{ backgroundColor: '#06080F', borderTopColor: '#1A2540' }}>
       <div className="max-w-6xl mx-auto px-6 sm:px-10">
+
+        {/* Header */}
         <div className="mb-14">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary mb-4">What We Build</p>
-          <h2 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight max-w-3xl" style={{ color: '#E8EEFF' }}>
-            A Two-Part System That Brings You Roofing Jobs on Autopilot.
+          <h2 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight max-w-4xl" style={{ color: '#E8EEFF' }}>
+            More Leads In.{' '}
+            <span style={{ color: '#2F6FEB' }}>None Slipping Out.</span>
           </h2>
+          <p className="mt-5 text-base leading-relaxed max-w-2xl" style={{ color: '#64748B' }}>
+            Two systems running in parallel — one fills your pipeline with qualified homeowners, the other makes sure every call and quote is handled before you even know it rang.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {cards.map((c, i) => (
-            <div key={i} className="sol-card glow-card bg-surface border border-divider rounded-2xl p-8 sm:p-10 transition-all duration-300 group" style={{ backgroundColor: '#0C1220', borderColor: '#1A2540' }}>
-              <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
-                {c.icon}
+        {/* Two-column layout */}
+        <div className="grid lg:grid-cols-12 gap-6">
+
+          {/* Left — Lead Gen */}
+          <div className="lg:col-span-7 flex flex-col gap-4">
+            {[
+              {
+                icon: Megaphone,
+                label: '01 — Lead Generation',
+                title: 'Facebook Ads That Find the Jobs',
+                text: 'Targeted ads in your service area reaching homeowners actively looking for roofing work — storm damage, replacements, leaks. Hot inbound leads, not cold lists.',
+              },
+              {
+                icon: Phone,
+                label: '02 — Instant Follow-Up',
+                title: '30-Second AI Callback',
+                text: 'The second a lead fills out a form, our AI calls them back within 30 seconds — qualifies the job, gets the details, and books the estimate on your calendar before anyone else picks up.',
+              },
+              {
+                icon: Star,
+                label: '03 — Exclusivity',
+                title: 'Your Leads. Only Yours.',
+                text: "We don't sell the same homeowner to three roofers. Every lead is exclusive to your business. You're not bidding against a competitor on your own pipeline.",
+              },
+            ].map((item, i) => {
+              const Icon = item.icon
+              return (
+                <div key={i} className="sol-row glow-card rounded-2xl border border-divider p-6 sm:p-7 flex gap-5 group transition-all duration-300" style={{ backgroundColor: '#0C1220', borderColor: '#1A2540' }}>
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-all duration-300 mt-0.5">
+                    <Icon className="h-4 w-4 text-primary" strokeWidth={2.2} />
+                  </div>
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.15em] mb-1" style={{ color: '#2F6FEB' }}>{item.label}</p>
+                    <h3 className="font-display font-black text-lg tracking-tight mb-2" style={{ color: '#E8EEFF' }}>{item.title}</h3>
+                    <p className="text-sm leading-relaxed" style={{ color: '#64748B' }}>{item.text}</p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Right — Voice Agent Coverage */}
+          <div className="sol-right lg:col-span-5">
+            <div className="rounded-2xl border border-divider h-full p-7 sm:p-8 flex flex-col" style={{ backgroundColor: '#0C1220', borderColor: '#1A2540' }}>
+              <div className="mb-6">
+                <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-mono uppercase tracking-[0.15em] mb-4" style={{ backgroundColor: 'rgba(47,111,235,0.1)', color: '#2F6FEB' }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  24/7 Inbound Coverage
+                </div>
+                <h3 className="font-display font-black text-2xl sm:text-3xl tracking-tight" style={{ color: '#E8EEFF' }}>
+                  A Voice Agent That Runs Your Phone.
+                </h3>
               </div>
-              <h3 className="font-display font-black text-xl sm:text-2xl text-ink tracking-tight mb-3" style={{ color: '#E8EEFF' }}>{c.title}</h3>
-              <p className="text-sm text-muted leading-relaxed" style={{ color: '#64748B' }}>{c.text}</p>
+
+              <div className="flex flex-col gap-5 flex-1">
+                {[
+                  { icon: PhoneCall, title: 'Never Miss a Call', text: 'Answers every inbound call instantly — day, night, weekends. Qualifies the lead and books the estimate on your calendar.' },
+                  { icon: FileText,  title: 'Follows Up on Dead Quotes', text: 'Sent 10 estimates, heard back from 4? The agent follows up on every cold quote automatically.' },
+                  { icon: Settings,  title: 'Trained on Your Business', text: 'Not a generic bot — trained on your service area, project types, and how you want to talk to homeowners.' },
+                ].map((f, i) => {
+                  const Icon = f.icon
+                  return (
+                    <div key={i} className="flex gap-4 items-start">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Icon className="h-3.5 w-3.5 text-primary" strokeWidth={2.2} />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm mb-1" style={{ color: '#E8EEFF' }}>{f.title}</p>
+                        <p className="text-xs leading-relaxed" style={{ color: '#64748B' }}>{f.text}</p>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <a href="#book-call" className="mt-8 inline-flex items-center gap-2 bg-primary text-white px-5 py-3 rounded-sm font-semibold text-sm shadow-lg shadow-primary/20 uppercase tracking-wide w-full justify-center">
+                See How It Works <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+              </a>
             </div>
-          ))}
+          </div>
+
         </div>
       </div>
     </section>
@@ -771,67 +834,6 @@ function Protocol() {
             </div>
           </div>
         ))}
-      </div>
-    </section>
-  )
-}
-
-// ─── ServicesGrid (Included) ──────────────────────────────────────────────────
-function WhatWeBuild() {
-  const ref = useRef(null)
-  useEffect(() => {
-    if (prefersReducedMotion) return
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.wwb-card',
-        { y: 40, opacity: 0 },
-        { scrollTrigger: { trigger: ref.current, start: 'top 80%', once: true }, y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out', immediateRender: false }
-      )
-    }, ref)
-    return () => ctx.revert()
-  }, [])
-
-  const features = [
-    {
-      icon: Phone,
-      title: 'Never Miss a Call',
-      text: 'Answers every inbound call instantly — day, night, weekends. Qualifies the lead, gets their project details, and books the estimate directly on your calendar.',
-    },
-    {
-      icon: FileText,
-      title: 'Follows Up on Dead Quotes',
-      text: 'Sent out 10 estimates last month? Only heard back from 4? The agent follows up automatically on every quote that goes cold — without you touching anything.',
-    },
-    {
-      icon: Settings,
-      title: 'Trained on Your Business',
-      text: 'Not a generic bot. Trained on your service area, your project types, and how you want to talk to homeowners. It sounds like your business — because it is.',
-    },
-  ]
-
-  return (
-    <section ref={ref} className="py-24 sm:py-32 bg-background border-t border-divider" style={{ backgroundColor: '#06080F', borderTopColor: '#1A2540' }}>
-      <div className="max-w-6xl mx-auto px-6 sm:px-10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary mb-4">What We Build</p>
-        <h2 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight text-white max-w-3xl mb-16">
-          A 24/7 Voice Agent That Runs Your Phone Like a{' '}
-          <span style={{ color: '#2F6FEB' }}>Full-Time Receptionist.</span>
-        </h2>
-        <div className="grid sm:grid-cols-3 gap-6">
-          {features.map((f, i) => {
-            const Icon = f.icon
-            return (
-              <div key={i} className="wwb-card glow-card rounded-2xl border border-divider p-8 flex flex-col gap-5" style={{ backgroundColor: '#0C1220', borderColor: '#1A2540' }}>
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Icon className="h-5 w-5 text-primary" strokeWidth={2.2} />
-                </div>
-                <div>
-                  <h3 className="font-display font-black text-xl tracking-tight mb-3" style={{ color: '#E8EEFF' }}>{f.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#64748B' }}>{f.text}</p>
-                </div>
-              </div>
-            )
-          })}
-        </div>
       </div>
     </section>
   )
@@ -1425,7 +1427,6 @@ export default function App() {
         <Pillars />
         <Problem />
         <Solution />
-        <WhatWeBuild />
         <Protocol />
         <ServicesGrid />
         <TrustSignals />
