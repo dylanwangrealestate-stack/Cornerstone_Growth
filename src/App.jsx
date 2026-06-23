@@ -7,6 +7,7 @@ import {
   ShieldCheck, Clock, CheckCircle2, Mail, MapPin,
   Activity, Settings, ChevronRight,
   FileText, BarChart3, Star, Zap, Megaphone,
+  PhoneCall, MessageSquare, RefreshCw,
 } from 'lucide-react'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -24,12 +25,12 @@ const NAV_LINKS = [
 ]
 
 const SERVICES = [
-  { icon: Megaphone,    title: 'Targeted Facebook Ads', text: 'Ads targeting homeowners in your service area who need roofing work right now — not cold outreach, not door knocking. Hot inbound leads.' },
-  { icon: Phone,        title: '30-Second AI Callback', text: 'Every form submit triggers an AI callback within 30 seconds — before they open Google and call the next roofer on the list.' },
-  { icon: CheckCircle2, title: 'Lead Qualification', text: 'The AI qualifies every lead on the call — roof type, damage, timeline, homeowner vs renter — so your time is only spent on real jobs.' },
-  { icon: CalendarCheck,title: 'Estimate Booking', text: 'Qualified leads drop straight into your calendar with all the details. You show up to the estimate ready to close.' },
-  { icon: Zap,          title: 'Storm Season Surge', text: 'Storm hits? We scale your ads up instantly to capture every homeowner who just saw damage. You\'re the first roofer calling.' },
-  { icon: BarChart3,    title: 'Monthly Optimization', text: 'We review lead quality and ad performance every month — cutting what doesn\'t convert, doubling down on what does.' },
+  { icon: PhoneCall,    title: 'AI Voice Receptionist',  text: 'Answers every inbound call 24/7, qualifies the lead, captures project details, and books the estimate directly on your calendar. No voicemail. No missed jobs.' },
+  { icon: FileText,     title: 'Quote Follow-Up Agent',  text: 'Automatically follows up on every estimate that goes cold — without you touching anything. Converts dead quotes into booked jobs.' },
+  { icon: CalendarCheck,title: 'Estimate Booking',       text: 'Homeowners book directly into your calendar during the call. No phone tag, no back-and-forth, no lost appointments.' },
+  { icon: Star,         title: 'Google Review Agent',    text: 'Post-job review requests sent automatically via SMS. More reviews means higher Google ranking means more inbound calls.' },
+  { icon: MessageSquare,title: 'Missed Call Text-Back',  text: 'Instant SMS fires to any caller you missed before they open Google and call the next contractor on the list.' },
+  { icon: RefreshCw,    title: 'Lead Re-Engagement',     text: 'Automatically re-contacts old leads who went cold at 3, 6, and 12 months. Dormant pipeline activated at zero ad spend.' },
 ]
 
 // ─── CountUp ──────────────────────────────────────────────────────────────────
@@ -776,6 +777,67 @@ function Protocol() {
 }
 
 // ─── ServicesGrid (Included) ──────────────────────────────────────────────────
+function WhatWeBuild() {
+  const ref = useRef(null)
+  useEffect(() => {
+    if (prefersReducedMotion) return
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.wwb-card',
+        { y: 40, opacity: 0 },
+        { scrollTrigger: { trigger: ref.current, start: 'top 80%', once: true }, y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'power3.out', immediateRender: false }
+      )
+    }, ref)
+    return () => ctx.revert()
+  }, [])
+
+  const features = [
+    {
+      icon: Phone,
+      title: 'Never Miss a Call',
+      text: 'Answers every inbound call instantly — day, night, weekends. Qualifies the lead, gets their project details, and books the estimate directly on your calendar.',
+    },
+    {
+      icon: FileText,
+      title: 'Follows Up on Dead Quotes',
+      text: 'Sent out 10 estimates last month? Only heard back from 4? The agent follows up automatically on every quote that goes cold — without you touching anything.',
+    },
+    {
+      icon: Settings,
+      title: 'Trained on Your Business',
+      text: 'Not a generic bot. Trained on your service area, your project types, and how you want to talk to homeowners. It sounds like your business — because it is.',
+    },
+  ]
+
+  return (
+    <section ref={ref} className="py-24 sm:py-32 bg-background border-t border-divider" style={{ backgroundColor: '#06080F', borderTopColor: '#1A2540' }}>
+      <div className="max-w-6xl mx-auto px-6 sm:px-10">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary mb-4">What We Build</p>
+        <h2 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight text-white max-w-3xl mb-16">
+          A 24/7 Voice Agent That Runs Your Phone Like a{' '}
+          <span style={{ color: '#2F6FEB' }}>Full-Time Receptionist.</span>
+        </h2>
+        <div className="grid sm:grid-cols-3 gap-6">
+          {features.map((f, i) => {
+            const Icon = f.icon
+            return (
+              <div key={i} className="wwb-card glow-card rounded-2xl border border-divider p-8 flex flex-col gap-5" style={{ backgroundColor: '#0C1220', borderColor: '#1A2540' }}>
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Icon className="h-5 w-5 text-primary" strokeWidth={2.2} />
+                </div>
+                <div>
+                  <h3 className="font-display font-black text-xl tracking-tight mb-3" style={{ color: '#E8EEFF' }}>{f.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: '#64748B' }}>{f.text}</p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── ServicesGrid ──────────────────────────────────────────────────────────────
 function ServicesGrid() {
   const ref = useRef(null)
 
@@ -1363,6 +1425,7 @@ export default function App() {
         <Pillars />
         <Problem />
         <Solution />
+        <WhatWeBuild />
         <Protocol />
         <ServicesGrid />
         <TrustSignals />
