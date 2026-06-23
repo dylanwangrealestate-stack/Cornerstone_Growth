@@ -1059,6 +1059,7 @@ function ContactForm() {
     }
     const formData = new FormData()
     Object.entries(data).forEach(([k, v]) => formData.append(k, v ?? ''))
+    formData.append('botcheck', '')
     try {
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -1155,6 +1156,7 @@ function ContactForm() {
               </div>
             ) : (
               <form onSubmit={onSubmit} className="rounded-2xl bg-surface border border-divider p-8 sm:p-10" style={{ backgroundColor: '#0C1220', borderColor: '#1A2540' }}>
+                <input type="checkbox" name="botcheck" style={{ display: 'none' }} />
                 <div className="grid sm:grid-cols-2 gap-5 mb-5">
                   {[
                     { id: 'name',    label: 'Full Name',      type: 'text',  placeholder: 'John Smith' },
