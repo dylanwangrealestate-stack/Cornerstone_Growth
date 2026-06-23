@@ -1067,7 +1067,7 @@ function ContactForm() {
       if (res.ok) {
         setStatus('sent')
         setTimeout(() => {
-          window.open('https://calendly.com/dylanwang-realestate/30min', '_blank')
+          window.open('https://calendly.com/dylanwang-cornerstonegrowth/30min', '_blank')
         }, 800)
       } else {
         setStatus('error')
@@ -1114,7 +1114,7 @@ function ContactForm() {
             <div className="flex flex-col gap-4 mb-10">
               {[
                 { icon: Phone,  label: 'Phone',    value: '(407) 743-0525', href: 'tel:4077430525' },
-                { icon: Mail,   label: 'Email',    value: 'dylanwang.realestate@gmail.com', href: 'mailto:dylanwang.realestate@gmail.com' },
+                { icon: Mail,   label: 'Email',    value: 'dylan.cornerstonegrowth@gmail.com', href: 'mailto:dylan.cornerstonegrowth@gmail.com' },
                 { icon: MapPin, label: 'Location', value: 'Remote — serving roofing contractors nationwide', href: null },
               ].map((c, i) => {
                 const Icon = c.icon
