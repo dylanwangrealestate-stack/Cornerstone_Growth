@@ -980,6 +980,14 @@ function Fab() {
 export default function App() {
   useReveal()
   useEffect(() => { reportVisit('cornerstone') }, [])
+  // Deep links like /#results: the sections render after the browser tried to
+  // jump, so scroll to the target once it exists.
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1))
+    if (!id) return
+    const t = setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'auto', block: 'start' }), 60)
+    return () => clearTimeout(t)
+  }, [])
   return (
     <div className="cg">
       <Navbar />
