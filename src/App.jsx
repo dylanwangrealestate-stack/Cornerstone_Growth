@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import {
   ArrowUpRight, ArrowRight, Phone, Menu, X, CalendarCheck, ShieldCheck, Clock, CheckCircle2, Mail, MapPin,
   Activity, Settings, FileText, Star, Zap, Megaphone, PhoneCall, MessageSquare, RefreshCw,
+  Globe, BellRing, UserCheck, BarChart3, Handshake, Landmark, MapPinned, Target, CalendarClock, TrendingUp,
 } from 'lucide-react'
 import './cg.css'
 
@@ -21,6 +22,7 @@ const IMG = {
 }
 
 const NAV_LINKS = [
+  { label: 'Results', href: '#results' },
   { label: 'Problem', href: '#problem' },
   { label: 'Solution', href: '#solution' },
   { label: 'Process', href: '#process' },
@@ -29,13 +31,39 @@ const NAV_LINKS = [
   { label: 'Contact', href: '#contact' },
 ]
 
-const SERVICES = [
-  { icon: PhoneCall, title: 'AI Voice Receptionist', text: 'Answers every inbound call 24/7, qualifies the lead, captures project details, and books the estimate directly on your calendar. No voicemail. No missed jobs.' },
-  { icon: FileText, title: 'Quote Follow-Up Agent', text: 'Automatically follows up on every estimate that goes cold — without you touching anything. Converts dead quotes into booked jobs.' },
-  { icon: CalendarCheck, title: 'Estimate Booking', text: 'Homeowners book directly into your calendar during the call. No phone tag, no back-and-forth, no lost appointments.' },
-  { icon: Star, title: 'Google Review Agent', text: 'Post-job review requests sent automatically via SMS. More reviews means higher Google ranking means more inbound calls.' },
-  { icon: MessageSquare, title: 'Missed Call Text-Back', text: 'Instant SMS fires to any caller you missed before they open Google and call the next contractor on the list.' },
-  { icon: RefreshCw, title: 'Lead Re-Engagement', text: 'Automatically re-contacts old leads who went cold at 3, 6, and 12 months. Dormant pipeline activated at zero ad spend.' },
+// What Cornerstone runs, grouped by job. `live` = running for Jones Roofing today.
+const SERVICE_GROUPS = [
+  {
+    name: 'Lead generation', blurb: 'Fill the pipeline with homeowners who need a roof.',
+    items: [
+      { icon: Megaphone, title: 'Facebook & Instagram Lead Ads', text: 'Campaigns built for your service area: creative, offers, targeting and qualifying lead forms. Rebuilt, they cut Jones\'s cost per lead from $76 to $12.', live: true },
+      { icon: Globe, title: 'Conversion Website', text: 'A fast, professional site with a qualifying form that matches your ads, so every click lands on the offer it came from.', live: true },
+      { icon: Star, title: 'Google Reviews & Business Profile', text: 'Review requests after every job and a complete Google Business Profile. Jones went from 2 to 6 five-star reviews.', live: true },
+      { icon: Target, title: 'Retargeting', text: 'Stay in front of homeowners who visited your site or opened a form but didn\'t finish, with your approved offers.' },
+    ],
+  },
+  {
+    name: 'Speed-to-lead & follow-up', blurb: 'Make sure no lead goes cold.',
+    items: [
+      { icon: BellRing, title: 'Instant Lead Alerts', text: 'Every Facebook and website lead texted to the owners in seconds with the full form details, around the clock.', live: true },
+      { icon: UserCheck, title: 'Lead Screening', text: 'Homeowner, roof issue, timeline and best time to call captured up front; renters flagged before they waste a trip.', live: true },
+      { icon: CalendarClock, title: 'Follow-Up Reminders & CRM', text: 'A pipeline for every lead and daily reminders of who to call next, from day 0 to day 30, until each lead is won or closed out.', live: true },
+      { icon: RefreshCw, title: 'Lead Re-Engagement', text: 'We call the leads everyone wrote off. On Jones\'s August list, 3 of 13 "dead" leads picked up.', live: true },
+      { icon: PhoneCall, title: 'AI Voice Receptionist', text: 'Answers every inbound call 24/7, qualifies the lead and books the estimate on your calendar. No voicemail. No missed jobs.' },
+      { icon: MessageSquare, title: 'Missed Call Text-Back', text: 'An instant text to any caller you missed, before they call the next contractor on the list.' },
+      { icon: FileText, title: 'Quote Follow-Up Agent', text: 'Automatically follows up on every estimate that goes cold, turning dead quotes into booked jobs.' },
+      { icon: BarChart3, title: 'Ad & Website Reports', text: 'Spend, leads, cost per lead and site visits sent to your phone, so you always know what the money is doing.', live: true },
+    ],
+  },
+  {
+    name: 'New growth add-ons', blurb: 'Bigger jobs and channels beyond Facebook.',
+    items: [
+      { icon: CalendarCheck, title: 'Appointment Setting', text: 'We call every lead, qualify them and book the inspection on your calendar. You just show up and close.', isNew: true },
+      { icon: Handshake, title: 'Realtor & Title Partner Network', text: 'Outreach to listing agents, title offices and inspectors who need a roofer for fast, insurance-ready roof reports. Partner jobs are bigger and repeat.', isNew: true },
+      { icon: Landmark, title: 'Grant-Program Marketing', text: 'Compliant marketing for Florida\'s My Safe Florida Home program, where homeowners choose their own licensed contractor. No "free roof" claims.', isNew: true },
+      { icon: MapPinned, title: 'Google Local Services Ads', text: 'Show up at the top of Google with the "Google Guaranteed" style listing homeowners call first, alongside your Business Profile.', isNew: true },
+    ],
+  },
 ]
 
 // ─── reveal on scroll (content stays visible if JS or the observer is missing) ─
@@ -263,6 +291,89 @@ function WhatWeDo() {
   )
 }
 
+// ─── results: Jones case study ──────────────────────────────────────────────────
+// Figures from Meta Ads Manager (campaign totals) and Google, 13 Oct 2026.
+function Results() {
+  const stats = [
+    { n: '01 / Leads', v: '21', lbl: 'Leads in one campaign', d: 'Homeowner leads from the rebuilt September campaign, up from 13 in the first.' },
+    { n: '02 / Cost per lead', v: '$11.97', lbl: '84% cheaper per lead', d: 'Down from $76.29 on the first campaign, after rebuilding the creative, offers and form.' },
+    { n: '03 / Reviews', v: '3×', lbl: '2 → 6 Google reviews', d: 'All five stars. Social proof homeowners check before they ever call.' },
+  ]
+  const rows = [
+    ['Leads', '13', '21', '+62%'],
+    ['Cost per lead', '$76.29', '$11.97', '−84%'],
+    ['Ad spend', '$991.78', '$251.47', '−75%'],
+    ['People reached', '—', '6,720', ''],
+    ['Impressions', '—', '10,091', ''],
+  ]
+  const built = ['New two-business website', 'Instant lead texts to both owners', 'Renter screening', 'Follow-up reminders, days 0–30', 'Ad + website reports', 'Google review growth', 'Re-engaged 3 of 13 "dead" leads', 'First job won from the ads']
+  return (
+    <section id="results" className="cg-sec cg-light alt">
+      <div className="wrap">
+        <div className="split">
+          <div><p className="kicker">/ Results · Jones Roofing Solutions</p><h2 className="display rv">Real numbers.<br /><em>From a real roofer.</em></h2></div>
+          <p className="lede rv">George and Nathan Jones run Jones Building Contractors and Jones Roofing Solutions in Central Florida. Before Cornerstone, every job came from referrals. Here's what changed.</p>
+        </div>
+
+        <div className="ba">
+          <article className="ba-card rv">
+            <div className="ba-tag before">Before</div>
+            <div className="ba-img"><img src="/results/jones-before.jpg" alt="Jones Roofing Solutions previous website (jonesroofingsolutions.com)" loading="lazy" /></div>
+            <ul className="ba-list">
+              <li className="x">Every job came from referrals</li>
+              <li className="x">No paid lead flow, no follow-up system</li>
+              <li className="x">2 Google reviews</li>
+              <li className="x">Basic one-page website, no lead alerts</li>
+            </ul>
+            <img className="ba-proof" src="/results/reviews-before.jpg" alt="Google listing showing 2 reviews" loading="lazy" />
+          </article>
+          <article className="ba-card after rv">
+            <div className="ba-tag after">After</div>
+            <div className="ba-img"><img src="/results/jones-after.jpg" alt="Jones Building Contractors website built by Cornerstone Growth" loading="lazy" /></div>
+            <ul className="ba-list">
+              <li className="ok">Steady homeowner leads from Facebook: 21 in one campaign</li>
+              <li className="ok">Every lead texted to George and Nathan in seconds</li>
+              <li className="ok">6 Google reviews, all five stars</li>
+              <li className="ok">New site for both businesses, with a qualifying form</li>
+            </ul>
+            <img className="ba-proof" src="/results/reviews-after.jpg" alt="Google listing showing 6 reviews" loading="lazy" />
+          </article>
+        </div>
+
+        <div className="numbers rv" style={{ marginTop: 22 }}>
+          {stats.map((x) => (
+            <div className="num" key={x.n}>
+              <div className="top"><span className="mono">{x.n}</span><i /></div>
+              <b className="big" style={{ fontSize: 'clamp(3.6rem, 6vw, 5.4rem)' }}>{x.v}</b>
+              <p className="lbl">{x.lbl}</p>
+              <p>{x.d}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="cmp-wrap">
+          <div className="cmp rv">
+            <div className="cmp-row head"><span>Facebook campaign</span><span>First (Aug)</span><span className="hl">Rebuilt (Sept)</span><span>Change</span></div>
+            {rows.map((r) => (
+              <div className="cmp-row" key={r[0]}>
+                <span>{r[0]}</span><span>{r[1]}</span><span className="hl">{r[2]}</span>
+                <span className={r[3] ? 'good' : ''}>{r[3]}</span>
+              </div>
+            ))}
+            <p className="cmp-note"><TrendingUp size={16} /> 62% more leads for 75% less ad spend.</p>
+          </div>
+          <div className="built rv">
+            <p className="mono" style={{ color: 'var(--blue)', marginBottom: 14 }}>What we built for Jones</p>
+            <ul className="ticks">{built.map((b) => <li key={b}>{b}</li>)}</ul>
+            <a href="https://www.jonesbuildingcontractors.com" target="_blank" rel="noopener noreferrer" className="btn" style={{ marginTop: 22 }}>See the Jones website <ArrowUpRight /></a>
+          </div>
+        </div>
+        <p className="src-note">Figures from Meta Ads Manager campaign totals and Google Business Profile, 13 October 2026. Leads are form leads as reported by Meta. Results depend on your market, offers and follow-up.</p>
+      </div>
+    </section>
+  )
+}
+
 // ─── numbers ───────────────────────────────────────────────────────────────────
 function Numbers() {
   const nums = [
@@ -437,15 +548,32 @@ function Services() {
     <section id="included" className="cg-sec cg-light">
       <div className="wrap">
         <div className="split">
-          <div><p className="kicker">/ The system</p><h2 className="display rv">Everything you need.<br /><em>Nothing you don't.</em></h2></div>
-          <div className="rv"><a href="#contact" className="btn btn-lg">Get More Roofing Jobs <ArrowUpRight /></a></div>
+          <div><p className="kicker">/ The system</p><h2 className="display rv">Everything we run.<br /><em>Nothing you don't need.</em></h2></div>
+          <div className="rv">
+            <p className="lede" style={{ marginBottom: 18 }}>The services marked <span className="tag-live">Live for Jones</span> are running for Jones Roofing right now.</p>
+            <a href="#contact" className="btn btn-lg">Get More Roofing Jobs <ArrowUpRight /></a>
+          </div>
         </div>
-        <div className="cards3">
-          {SERVICES.map((s) => {
-            const I = s.icon
-            return <div className="svc rv" key={s.title}><span className="icon"><I /></span><h3>{s.title}</h3><p>{s.text}</p></div>
-          })}
-        </div>
+        {SERVICE_GROUPS.map((g, gi) => (
+          <div className="svc-group" key={g.name}>
+            <div className="svc-head"><span className="mono">0{gi + 1}</span><h3>{g.name}</h3><p>{g.blurb}</p></div>
+            <div className="cards3">
+              {g.items.map((it) => {
+                const I = it.icon
+                return (
+                  <div className="svc rv" key={it.title}>
+                    <div className="svc-top">
+                      <span className="icon"><I /></span>
+                      {it.live && <span className="tag-live">Live for Jones</span>}
+                      {it.isNew && <span className="tag-new">New</span>}
+                    </div>
+                    <h3>{it.title}</h3><p>{it.text}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   )
@@ -769,6 +897,7 @@ export default function App() {
       <main>
         <Hero />
         <WhatWeDo />
+        <Results />
         <Numbers />
         <Problem />
         <LiveSystem />
