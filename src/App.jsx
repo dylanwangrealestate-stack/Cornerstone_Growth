@@ -6,6 +6,7 @@ import {
   Globe, BellRing, UserCheck, BarChart3, Handshake, Landmark, MapPinned, Target, CalendarClock, TrendingUp,
 } from 'lucide-react'
 import './cg.css'
+import { reportVisit, reportBookClick, reportBooked } from './visit'
 
 /* Cornerstone Growth, 2026-10-13 redesign.
  * Same outline as the Jones site: photo hero under a floating frosted-glass
@@ -14,17 +15,19 @@ import './cg.css'
  * the contact pipeline (Web3Forms email + /api/lead CRM save and text alert)
  * are unchanged from the previous version (git e5f738e). */
 
-const IMG = {
-  hero: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=2000&q=80&auto=format&fit=crop',
-  meet: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&q=80&auto=format&fit=crop',
-  ai: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80&auto=format&fit=crop',
-  site: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1200&q=80&auto=format&fit=crop',
-}
+// Self-hosted and compressed (were hot-linked from Unsplash at full size).
+const IMG = { hero: '/img/hero.jpg', meet: '/img/meet.jpg', ai: '/img/ai.jpg', site: '/img/site.jpg' }
 
-const BOOK_URL = 'https://calendly.com/dylanwang-cornerstonegrowth/30min'
+export const BOOK_URL = 'https://calendly.com/dylanwang-cornerstonegrowth/30min'
 /** Count a booking click as a conversion (Vercel Analytics -> Events). */
-const trackBook = (where) => { try { if (window.va) window.va('event', { name: 'Book call click', data: { where } }) } catch { /* analytics optional */ } }
-function BookLink({ where, className = 'btn btn-lg', children }) {
+/** Count a booking click as a conversion (Vercel Analytics, Meta Pixel if set) and text Dylan. */
+export const pixel = (...args) => { try { if (window.fbq) window.fbq(...args) } catch { /* pixel optional */ } }
+export const trackBook = (where) => {
+  try { if (window.va) window.va('event', { name: 'Book call click', data: { where } }) } catch { /* analytics optional */ }
+  pixel('track', 'Contact', { content_name: where })
+  reportBookClick(where)
+}
+export function BookLink({ where, className = 'btn btn-lg', children }) {
   return <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" className={className} onClick={() => trackBook(where)}>{children}</a>
 }
 
@@ -138,16 +141,16 @@ function PipelineWidget() {
 
 function StatWidget() {
   const stats = [
-    { value: 80, suffix: '%', label: 'Homeowners go with the first roofer to call them back', color: '#f87171' },
-    { value: 72, suffix: '%', label: 'Research online before ever picking up the phone', color: '#5c93f5' },
-    { value: 3, suffix: 'x', label: 'More jobs for roofers running targeted local ads', color: '#22c55e' },
+    { value: '21', suffix: '', label: 'Homeowner leads in one Jones Roofing campaign', color: '#5c93f5' },
+    { value: '$11.97', suffix: '', label: 'Cost per lead, down 84% from the first campaign', color: '#22c55e' },
+    { value: '6', suffix: '★', label: 'Five-star Google reviews, up from 2', color: '#f5b84d' },
   ]
   const [i, setI] = useState(0)
   useEffect(() => { const id = setInterval(() => setI((x) => (x + 1) % 3), 3000); return () => clearInterval(id) }, [])
   const s = stats[i]
   return (
     <div className="widget">
-      <div className="wh"><span>Lead stats</span><span>{i + 1}/3</span></div>
+      <div className="wh"><span>Jones Roofing results</span><span>{i + 1}/3</span></div>
       <div className="stat" key={i}><b style={{ color: s.color }}>{s.value}{s.suffix}</b><span>{s.label}</span></div>
       <div className="dots" style={{ justifyContent: 'center' }}>{stats.map((_, k) => <i key={k} style={k === i ? { width: 24, background: s.color } : undefined} />)}</div>
     </div>
@@ -232,7 +235,7 @@ function Navbar() {
 function Hero() {
   return (
     <section id="home" className="cg-hero">
-      <div className="bg" style={{ backgroundImage: `url(${IMG.hero})` }} role="img" aria-label="Roofing crew on a job site" />
+      <div className="bg" role="img" aria-label="Roofing crew on a job site" />
       <div className="shade" />
       <div className="wrap in">
         <div>
@@ -263,6 +266,74 @@ function Hero() {
         </div>
       </div>
       <a href="#what" className="cg-scroll" aria-label="Scroll down"><span>SCROLL</span><i /></a>
+    </section>
+  )
+}
+
+// ─── Calendly inline ───────────────────────────────────────────────────────────
+// Booking without leaving the page. Calendly posts a message when a call is
+// scheduled: count it everywhere and text Dylan straight away.
+export function CalendlyInline({ where = 'inline', height = 700 }) {
+  useEffect(() => {
+    const onMsg = (e) => {
+      if (e.origin !== 'https://calendly.com' || !e.data || e.data.event !== 'calendly.event_scheduled') return
+      try { if (window.va) window.va('event', { name: 'Call booked', data: { where } }) } catch { /* optional */ }
+      pixel('track', 'Schedule', { content_name: where })
+      reportBooked(where)
+    }
+    window.addEventListener('message', onMsg)
+    return () => window.removeEventListener('message', onMsg)
+  }, [where])
+  const src = `${BOOK_URL}?embed_domain=${encodeURIComponent(window.location.hostname)}&embed_type=Inline&hide_gdpr_banner=1&background_color=ffffff&primary_color=2f6feb`
+  return (
+    <div className="cal-wrap">
+      <iframe title="Book a free strategy call" src={src} style={{ height }} loading="lazy" />
+    </div>
+  )
+}
+
+// ─── lead magnet: free missed-lead audit ───────────────────────────────────────
+function LeadMagnet() {
+  const [state, setState] = useState('idle')
+  const submit = async (e) => {
+    e.preventDefault()
+    const f = e.target
+    if (f.botcheck.checked) return
+    setState('sending')
+    try {
+      const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+        name: f.name.value, email: f.email.value, phone: f.phone.value, company: f.company.value,
+        message: 'Requested: FREE MISSED-LEAD AUDIT (send within 1 business day)', botcheck: '' }) })
+      if (!r.ok) throw new Error()
+      pixel('track', 'Lead', { content_name: 'audit' })
+      try { if (window.va) window.va('event', { name: 'Audit requested' }) } catch { /* optional */ }
+      setState('sent')
+    } catch { setState('error') }
+  }
+  return (
+    <section className="cg-sec cg-light alt" id="audit">
+      <div className="wrap">
+        <div className="audit glass-light rv">
+          <div>
+            <p className="kicker">/ Not ready to talk yet?</p>
+            <h2 className="display" style={{ fontSize: 'clamp(1.9rem, 3.6vw, 2.8rem)' }}>Get a free<br /><em>missed-lead audit.</em></h2>
+            <p>We'll check how fast your business answers a new lead, what your Google profile and site show a homeowner, and where jobs are slipping. You get a short written report within one business day. No call required.</p>
+          </div>
+          {state === 'sent' ? (
+            <div className="audit-done"><CheckCircle2 size={40} color="#2f6feb" /><h3>Request received.</h3><p>Your audit will land in your inbox within one business day.</p></div>
+          ) : (
+            <form className="audit-form" onSubmit={submit}>
+              <input type="checkbox" name="botcheck" style={{ display: 'none' }} tabIndex={-1} />
+              <input name="name" required placeholder="Your name" autoComplete="name" />
+              <input name="company" required placeholder="Company" autoComplete="organization" />
+              <input name="email" type="email" required placeholder="Email" autoComplete="email" />
+              <input name="phone" type="tel" placeholder="Phone (optional)" autoComplete="tel" />
+              <button className="btn btn-lg btn-block" disabled={state === 'sending'}>{state === 'sending' ? 'Sending…' : <>Send My Free Audit <ArrowRight /></>}</button>
+              {state === 'error' && <p className="audit-err">Something went wrong. Email dylan.cornerstonegrowth@gmail.com and we'll send it.</p>}
+            </form>
+          )}
+        </div>
+      </div>
     </section>
   )
 }
@@ -317,7 +388,7 @@ function WhatWeDo() {
 
 // ─── results: Jones case study ──────────────────────────────────────────────────
 // Figures from Meta Ads Manager (campaign totals) and Google, 13 Oct 2026.
-function Results() {
+export function Results() {
   const stats = [
     { n: '01 / Leads', v: '21', lbl: 'Leads in one campaign', d: 'Homeowner leads from the rebuilt September campaign, up from 13 in the first.' },
     { n: '02 / Cost per lead', v: '$11.97', lbl: '84% cheaper per lead', d: 'Down from $76.29 on the first campaign, after rebuilding the creative, offers and form.' },
@@ -399,7 +470,7 @@ function Results() {
 }
 
 // ─── problem ───────────────────────────────────────────────────────────────────
-function Problem() {
+export function Problem() {
   const rows = [
     { t: '7:04am', text: "You're on a roof. Phone buzzes — homeowner saw hail damage last night. Can't pick up." },
     { t: '7:05am', text: 'Homeowner hangs up. Googles "roof repair near me." Calls the next result.', lost: true },
@@ -435,7 +506,7 @@ function Problem() {
 // ─── live system ───────────────────────────────────────────────────────────────
 function LiveSystem() {
   const cards = [
-    { n: '01 / Lead stats', title: 'By the numbers', w: <StatWidget />, p: 'Speed and visibility win roofing jobs. We make sure you show up first and call back fastest.' },
+    { n: '01 / Real results', title: 'By the numbers', w: <StatWidget />, p: 'Real figures from a Central Florida roofer we run this system for (Meta Ads Manager and Google, Oct 2026).' },
     { n: '02 / Lead pipeline', title: 'From ad to booked', w: <PipelineWidget />, p: 'Every lead that comes in gets called within 30 seconds, qualified, and booked — automatically.' },
     { n: '03 / Scheduling', title: 'Estimates booked instantly', w: <SchedulerWidget />, p: 'The AI finds the next open slot and books the estimate in real time — no phone tag, no back-and-forth.' },
   ]
@@ -507,7 +578,7 @@ function Solution() {
 }
 
 // ─── process ───────────────────────────────────────────────────────────────────
-function Process() {
+export function Process() {
   const steps = [
     { num: '01', eyebrow: 'Discovery', title: 'We learn your business', body: "Your service area, the jobs you want more of, how you currently get leads, and what your busy season looks like. One call. That's it.", bullets: ['Service area, project types, and average job value', 'Current lead sources — referrals, Google, nothing?', 'Storm season timing and surge capacity'], img: IMG.meet },
     { num: '02', eyebrow: 'Build & Launch', title: 'We build and launch the system', body: 'Facebook ad campaign built for your market. AI callback configured for your business. Live in days, not weeks.', bullets: ['Ad creative written for your service area and job types', 'AI callback trained to qualify roofing leads specifically', 'Integrated with your calendar — Google, Jobber, or anything else'], img: IMG.ai },
@@ -599,7 +670,7 @@ function Trust() {
 }
 
 // ─── faq ───────────────────────────────────────────────────────────────────────
-function FAQ() {
+export function FAQ() {
   const [open, setOpen] = useState(0)
   const items = [
     { q: 'How is this different from HomeAdvisor or Angi?', a: "Night and day. HomeAdvisor sells your lead to 4 roofers at the same time — you're competing on price before you've even had a conversation. Our leads are exclusive. You're the only roofer calling that homeowner." },
@@ -659,6 +730,7 @@ const CALL_VOLUME_BRACKETS = [
 
 function ContactForm() {
   const [status, setStatus] = useState('idle')
+  const [mode, setMode] = useState('book')
   const [revenue, setRevenue] = useState('')
   const [projectVal, setProjectVal] = useState('')
   const [callVolume, setCallVolume] = useState('')
@@ -720,6 +792,7 @@ function ContactForm() {
       const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData })
       if (res.ok) {
         setStatus('sent')
+        pixel('track', 'Lead', { content_name: 'call-back form' })
         if (window.va) window.va('event', { name: 'Form submitted', data: { form: 'Contact form' } })
         setTimeout(() => { window.open('https://calendly.com/dylanwang-cornerstonegrowth/30min', '_blank') }, 800)
       } else {
@@ -763,7 +836,12 @@ function ContactForm() {
           </div>
         </div>
 
-        {status === 'sent' ? (
+        {status !== 'sent' && mode === 'book' ? (
+          <div className="book-col rv">
+            <div className="seg-toggle glass"><button className="on">Pick a time</button><button onClick={() => setMode('form')}>Have us call you</button></div>
+            <CalendlyInline where="contact" height={680} />
+          </div>
+        ) : status === 'sent' ? (
           <div className="sent glass">
             <CheckCircle2 />
             <h3>Got it. We'll be in touch.</h3>
@@ -771,6 +849,7 @@ function ContactForm() {
           </div>
         ) : (
           <form className="form glass rv" onSubmit={onSubmit}>
+            <div className="seg-toggle glass" style={{ marginBottom: 6 }}><button type="button" onClick={() => setMode('book')}>Pick a time</button><button type="button" className="on">Have us call you</button></div>
             <input type="checkbox" name="botcheck" style={{ display: 'none' }} />
             <div className="form-head"><h3>Prefer we call you?</h3><p>Four fields. We'll reach out within one business day.</p></div>
             <div className="row2">
@@ -843,7 +922,7 @@ function ContactForm() {
 }
 
 // ─── footer ────────────────────────────────────────────────────────────────────
-function Footer() {
+export function Footer() {
   return (
     <footer className="cg-foot">
       <div className="wrap">
@@ -900,6 +979,7 @@ function Fab() {
 
 export default function App() {
   useReveal()
+  useEffect(() => { reportVisit('cornerstone') }, [])
   return (
     <div className="cg">
       <Navbar />
@@ -915,6 +995,7 @@ export default function App() {
         <CtaBand where="after-process" title="First leads in 48 hours." em="It starts with one call." sub="No contracts on the call, no tech setup on your end. If it's not a fit, we'll tell you." />
         <Services />
         <Trust />
+        <LeadMagnet />
         <FAQ />
         <ContactForm />
       </main>

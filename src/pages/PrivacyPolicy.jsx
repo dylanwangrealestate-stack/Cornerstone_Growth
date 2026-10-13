@@ -1,30 +1,31 @@
 import { Link } from 'react-router-dom'
+import '../cg.css'
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen text-ink" style={{ backgroundColor: '#06080F' }}>
+    <div className="cg min-h-screen text-ink"  style={{ backgroundColor: '#0a1020' }}>
       {/* Minimal nav */}
-      <div className="border-b border-white/5" style={{ borderColor: '#1A2540' }}>
+      <div className="border-b border-white/5" style={{ borderColor: 'rgba(255,255,255,.08)' }}>
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/">
-            <img src="/cornerstone_growth_logo.png" alt="Cornerstone Growth" className="h-8 w-auto" />
+            <img src="/cornerstone_growth_logo.png" alt="Cornerstone Growth" className="h-9 w-auto" />
           </Link>
-          <Link to="/" className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary hover:text-white transition-colors">
+          <Link to="/" className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#5c93f5] hover:text-white transition-colors">
             ← Back to home
           </Link>
         </div>
       </div>
 
       <div className="max-w-3xl mx-auto px-6 py-16 sm:py-24">
-        <h1 className="font-display font-black text-4xl sm:text-5xl text-white tracking-tight mb-4">Privacy Policy</h1>
+        <h1 className="font-bold tracking-tight text-4xl sm:text-5xl text-white tracking-tight mb-4">Privacy Policy</h1>
 
-        <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary mb-2">Cornerstone Growth</div>
+        <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#5c93f5] mb-2">Cornerstone Growth</div>
         <div className="text-sm text-white/50 mb-1">Operated by Dylan Wang LLC</div>
         <div className="text-sm text-white/50 mb-1">Website: https://www.cornerstonegrowth.us</div>
         <div className="text-sm text-white/50 mb-1">Email: dylan.cornerstonegrowth@gmail.com</div>
         <div className="text-sm text-white/50 mb-6">Phone: 407-743-0525</div>
 
-        <div className="flex gap-6 mb-12 pb-8 border-b" style={{ borderColor: '#1A2540' }}>
+        <div className="flex gap-6 mb-12 pb-8 border-b" style={{ borderColor: 'rgba(255,255,255,.08)' }}>
           <div>
             <div className="font-mono text-[9px] uppercase tracking-widest text-white/30 mb-1">Effective Date</div>
             <div className="text-sm text-white/60">July 6, 2026</div>
@@ -137,21 +138,21 @@ export default function PrivacyPolicy() {
 
           <Section title="11. Contact Information">
             <p>If you have questions or concerns about this Privacy Policy or our data practices, please contact us:</p>
-            <div className="mt-4 p-5 rounded-xl border border-white/8 space-y-1" style={{ background: 'rgba(47,111,235,0.06)', borderColor: '#1A2540' }}>
+            <div className="mt-4 p-5 rounded-xl border border-white/8 space-y-1" style={{ background: 'rgba(47,111,235,0.06)', borderColor: 'rgba(255,255,255,.08)' }}>
               <div className="font-semibold text-white">Cornerstone Growth</div>
               <div className="text-white/60 text-sm">Operated by Dylan Wang LLC</div>
               <div className="text-white/60 text-sm">3219 South Orange Ave, Orlando, FL 32806</div>
-              <div className="text-white/60 text-sm">Email: <a href="mailto:dylan.cornerstonegrowth@gmail.com" className="text-primary hover:text-white transition-colors">dylan.cornerstonegrowth@gmail.com</a></div>
-              <div className="text-white/60 text-sm">Phone: <a href="tel:4077430525" className="text-primary hover:text-white transition-colors">407-743-0525</a></div>
-              <div className="text-white/60 text-sm">Website: <a href="https://www.cornerstonegrowth.us" className="text-primary hover:text-white transition-colors">https://www.cornerstonegrowth.us</a></div>
+              <div className="text-white/60 text-sm">Email: <a href="mailto:dylan.cornerstonegrowth@gmail.com" className="text-[#5c93f5] hover:text-white transition-colors">dylan.cornerstonegrowth@gmail.com</a></div>
+              <div className="text-white/60 text-sm">Phone: <a href="tel:4077430525" className="text-[#5c93f5] hover:text-white transition-colors">407-743-0525</a></div>
+              <div className="text-white/60 text-sm">Website: <a href="https://www.cornerstonegrowth.us" className="text-[#5c93f5] hover:text-white transition-colors">https://www.cornerstonegrowth.us</a></div>
             </div>
           </Section>
 
         </div>
 
-        <div className="mt-16 pt-8 border-t flex items-center justify-between" style={{ borderColor: '#1A2540' }}>
+        <div className="mt-16 pt-8 border-t flex items-center justify-between" style={{ borderColor: 'rgba(255,255,255,.08)' }}>
           <p className="font-mono text-[10px] text-white/25">© {new Date().getFullYear()} Cornerstone Growth. All rights reserved.</p>
-          <Link to="/" className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary hover:text-white transition-colors">
+          <Link to="/" className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#5c93f5] hover:text-white transition-colors">
             ← Back to home
           </Link>
         </div>
@@ -162,8 +163,8 @@ export default function PrivacyPolicy() {
 
 function Section({ title, children }) {
   return (
-    <div className="pb-8 border-b last:border-0" style={{ borderColor: '#1A2540' }}>
-      <h2 className="font-display font-black text-xl text-white tracking-tight mb-4">{title}</h2>
+    <div className="pb-8 border-b last:border-0" style={{ borderColor: 'rgba(255,255,255,.08)' }}>
+      <h2 className="font-bold tracking-tight text-xl text-white tracking-tight mb-4">{title}</h2>
       <div className="space-y-4 text-white/60 leading-relaxed text-sm">{children}</div>
     </div>
   )
