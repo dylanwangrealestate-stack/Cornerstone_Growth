@@ -21,6 +21,13 @@ const IMG = {
   site: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1200&q=80&auto=format&fit=crop',
 }
 
+const BOOK_URL = 'https://calendly.com/dylanwang-cornerstonegrowth/30min'
+/** Count a booking click as a conversion (Vercel Analytics -> Events). */
+const trackBook = (where) => { try { if (window.va) window.va('event', { name: 'Book call click', data: { where } }) } catch { /* analytics optional */ } }
+function BookLink({ where, className = 'btn btn-lg', children }) {
+  return <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" className={className} onClick={() => trackBook(where)}>{children}</a>
+}
+
 const NAV_LINKS = [
   { label: 'Results', href: '#results' },
   { label: 'Problem', href: '#problem' },
@@ -205,7 +212,7 @@ function Navbar() {
         <div className="pill">
           <a href="#home" className="logo" aria-label="Cornerstone Growth home"><img src="/cornerstone_growth_logo.png" alt="Cornerstone Growth" /></a>
           <nav className="links" aria-label="Main">{NAV_LINKS.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}</nav>
-          <a href="#contact" className="btn cta">Get More Jobs <ArrowUpRight /></a>
+          <BookLink where="nav" className="btn cta">Book a Call <ArrowUpRight /></BookLink>
           <button className="menu-btn" onClick={() => setOpen(!open)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open}>
             {open ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -214,7 +221,7 @@ function Navbar() {
       {open && (
         <div className="cg-sheet" onClick={(e) => { if (e.target.closest('a')) setOpen(false) }}>
           <nav>{NAV_LINKS.map((l, i) => <a key={l.label} href={l.href}><span>0{i + 1}</span>{l.label}</a>)}</nav>
-          <a href="#contact" className="btn btn-lg btn-block">Get More Roofing Jobs <ArrowUpRight /></a>
+          <BookLink where="menu" className="btn btn-lg btn-block">Book a Free Strategy Call <ArrowUpRight /></BookLink>
         </div>
       )}
     </>
@@ -229,23 +236,20 @@ function Hero() {
       <div className="shade" />
       <div className="wrap in">
         <div>
-          <p className="eyebrow">THE ROOFING LEAD SYSTEM · FACEBOOK ADS + AI CALLBACK</p>
+          <p className="eyebrow">FOR ROOFING CONTRACTORS · FACEBOOK ADS + INSTANT FOLLOW-UP</p>
           <h1>More qualified<br />roofing jobs.<br /><em>Zero cold outreach.</em></h1>
-          <p className="lead">We run targeted Facebook ads and call every new lead back within 30 seconds — <b>so you're always the first roofer they talk to, not the fourth.</b></p>
+          <p className="lead">We run targeted Facebook ads, text you every lead in seconds and follow up until it's booked — <b>so you're the first roofer they talk to, not the fourth.</b></p>
           <div className="ctas">
-            <a href="#contact" className="btn btn-lg">See How It Works <ArrowRight /></a>
-            <a href="#process" className="btn btn-lg btn-glass">First leads in 48 hours</a>
+            <BookLink where="hero">Book a Free Strategy Call <ArrowRight /></BookLink>
+            <a href="#results" className="btn btn-lg btn-glass">See the results</a>
           </div>
-          <div className="chips">
-            <a href="#solution" className="chip glass">
-              <span className="ico"><ShieldCheck /></span>
-              <span><b>Exclusive leads</b><small>Never shared with competitors</small></span>
-            </a>
-            <a href="#solution" className="chip glass">
-              <span className="ico"><PhoneCall /></span>
-              <span><b>30-second AI callback</b><small>Before anyone else picks up</small></span>
-            </a>
-          </div>
+          <p className="hero-risk"><ShieldCheck size={15} /> Free call · No contracts · Exclusive leads, never shared</p>
+          <a href="#results" className="proof glass">
+            <div><b>21</b><small>leads in one campaign</small></div>
+            <div><b>$11.97</b><small>per lead</small></div>
+            <div><b>84%</b><small>lower cost per lead</small></div>
+            <span className="proof-src">Jones Roofing Solutions · Central Florida · Meta Ads Manager</span>
+          </a>
         </div>
         <div>
           <div className="cg-lead glass">
@@ -259,6 +263,26 @@ function Hero() {
         </div>
       </div>
       <a href="#what" className="cg-scroll" aria-label="Scroll down"><span>SCROLL</span><i /></a>
+    </section>
+  )
+}
+
+// ─── CTA band ──────────────────────────────────────────────────────────────────
+function CtaBand({ title, em, sub, where }) {
+  return (
+    <section className="cta-band">
+      <div className="wrap">
+        <div className="cta-card glass rv">
+          <div>
+            <h2 className="display" style={{ margin: 0 }}>{title}<br /><em>{em}</em></h2>
+            <p>{sub}</p>
+          </div>
+          <div className="cta-actions">
+            <BookLink where={where}>Book a Free Strategy Call <ArrowRight /></BookLink>
+            <span className="hero-risk" style={{ margin: 0 }}><Clock size={15} /> Pick a time in under a minute</span>
+          </div>
+        </div>
+      </div>
     </section>
   )
 }
@@ -369,35 +393,6 @@ function Results() {
           </div>
         </div>
         <p className="src-note">Figures from Meta Ads Manager campaign totals and Google Business Profile, 13 October 2026. Leads are form leads as reported by Meta. Results depend on your market, offers and follow-up.</p>
-      </div>
-    </section>
-  )
-}
-
-// ─── numbers ───────────────────────────────────────────────────────────────────
-function Numbers() {
-  const nums = [
-    { n: '01 / Speed wins', v: 80, sup: '%', lbl: 'Call the first roofer back', d: "Of homeowners go with the first roofer to call them back. It's not about being the best — it's about being first. We make sure that's you." },
-    { n: '02 / Online first', v: 72, sup: '%', lbl: 'Research online first', d: "Of homeowners look online before ever picking up the phone. If you're not in their feed when storm damage is fresh, you're invisible." },
-    { n: '03 / Ads change the math', v: 3, sup: 'x', lbl: 'More roofing jobs', d: 'For contractors running targeted local ads compared to referrals alone. One good storm season campaign pays for itself many times over.' },
-  ]
-  return (
-    <section className="cg-sec cg-light cg-grid">
-      <div className="wrap">
-        <div className="split">
-          <div><p className="kicker">/ Why it works</p><h2 className="display rv">The numbers<br /><em>behind the system.</em></h2></div>
-          <p className="lede rv">Speed and visibility win roofing jobs. We make sure you show up first and call back fastest.</p>
-        </div>
-        <div className="numbers rv">
-          {nums.map((x) => (
-            <div className="num" key={x.n}>
-              <div className="top"><span className="mono">{x.n}</span><i /></div>
-              <b className="big"><CountUp end={x.v} /><sup>{x.sup}</sup></b>
-              <p className="lbl">{x.lbl}</p>
-              <p>{x.d}</p>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   )
@@ -621,7 +616,7 @@ function FAQ() {
           <p className="kicker">/ Questions</p>
           <h2 className="display rv">Things roofers want<br /><em>to know first.</em></h2>
           <p className="lede" style={{ marginBottom: 28 }}>No sales deck, no case studies from industries you don't work in. Just honest answers.</p>
-          <a href="#contact" className="btn">Still have questions? Book a call <ArrowUpRight /></a>
+          <BookLink where="faq" className="btn">Still have questions? Book a call <ArrowUpRight /></BookLink>
         </div>
         <div className="faq rv">
           {items.map((it, i) => (
@@ -747,8 +742,9 @@ function ContactForm() {
       <div className="wrap two">
         <div>
           <p className="kicker">/ The next step</p>
-          <h2 className="display rv">Get more roofing jobs.<br /><em>Starting this week.</em></h2>
-          <p>We'll look at your service area, your current lead flow, and show you exactly what a targeted ad campaign and 30-second callback system would do for your business.</p>
+          <h2 className="display rv">Book your free<br /><em>strategy call.</em></h2>
+          <p>We'll look at your service area and your current lead flow, and show you exactly what a targeted ad campaign and instant follow-up would do for your business. You leave with a plan either way.</p>
+          <BookLink where="contact" className="btn btn-lg" >Pick a time now <ArrowRight /></BookLink>
           <ul className="ticks">
             <li>Honest call — working session, not a pitch</li>
             <li>Exclusive leads — never shared with competitors</li>
@@ -770,12 +766,13 @@ function ContactForm() {
         {status === 'sent' ? (
           <div className="sent glass">
             <CheckCircle2 />
-            <h3>We'll be in touch.</h3>
-            <p>Expect an email within one business day to schedule your free strategy call.</p>
+            <h3>Got it. We'll be in touch.</h3>
+            <p>Expect a call or email within one business day. Want it sooner? <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" style={{ color: '#93c5fd', textDecoration: 'underline' }} onClick={() => trackBook('after-form')}>Pick a time now</a>.</p>
           </div>
         ) : (
           <form className="form glass rv" onSubmit={onSubmit}>
             <input type="checkbox" name="botcheck" style={{ display: 'none' }} />
+            <div className="form-head"><h3>Prefer we call you?</h3><p>Four fields. We'll reach out within one business day.</p></div>
             <div className="row2">
               <label>Full name<input id="name" name="name" required placeholder="John Smith" autoComplete="name" /></label>
               <label>Email<input id="email" name="email" type="email" required placeholder="john@smithroofing.com" autoComplete="email" /></label>
@@ -784,8 +781,11 @@ function ContactForm() {
               <label>Phone<input id="phone" name="phone" type="tel" required placeholder="(555) 000-0000" autoComplete="tel" /></label>
               <label>Company<input id="company" name="company" required placeholder="Smith Roofing LLC" autoComplete="organization" /></label>
             </div>
+            <details className="more">
+            <summary>Add details for a free missed-revenue estimate <span>(optional)</span></summary>
+            <div className="more-in">
             <label>Roughly what's your monthly revenue?
-              <select id="revenue" name="revenue" required value={revenue} onChange={(e) => setRevenue(e.target.value)}>
+              <select id="revenue" name="revenue" value={revenue} onChange={(e) => setRevenue(e.target.value)}>
                 <option value="">Select your range</option>
                 {REVENUE_BRACKETS.map((b) => <option key={b.value} value={b.value}>{b.label}</option>)}
               </select>
@@ -827,11 +827,13 @@ function ContactForm() {
               </div>
             )}
             <label>Tell us about your business
-              <textarea id="message" name="message" rows={4} placeholder="What's your service area? How do you currently get leads — referrals, Google, nothing? What's your busiest season?" />
+              <textarea id="message" name="message" rows={3} placeholder="What's your service area? How do you currently get leads — referrals, Google, nothing? What's your busiest season?" />
             </label>
+            </div>
+            </details>
             {status === 'error' && <p className="err">Something went wrong — please email us directly at <a href="mailto:dylan.cornerstonegrowth@gmail.com">dylan.cornerstonegrowth@gmail.com</a></p>}
             <button type="submit" className="btn btn-lg btn-block" disabled={status === 'sending'}>
-              {status === 'sending' ? <><Activity /> Sending…</> : <>Get More Roofing Jobs <ArrowUpRight /></>}
+              {status === 'sending' ? <><Activity /> Sending…</> : <>Call Me Back <ArrowUpRight /></>}
             </button>
           </form>
         )}
@@ -886,7 +888,14 @@ function Fab() {
     window.addEventListener('scroll', h, { passive: true })
     return () => window.removeEventListener('scroll', h)
   }, [])
-  return <a href="#contact" className={`cg-fab${hide ? ' hide' : ''}`} aria-label="Book a strategy call"><MessageSquare /></a>
+  return (
+    <>
+      <a href={BOOK_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackBook('fab')} className={`cg-fab${hide ? ' hide' : ''}`} aria-label="Book a strategy call"><CalendarCheck /></a>
+      <div className={`cg-sticky${hide ? ' hide' : ''}`}>
+        <BookLink where="sticky" className="btn btn-block">Book a Free Strategy Call <ArrowRight /></BookLink>
+      </div>
+    </>
+  )
 }
 
 export default function App() {
@@ -896,13 +905,14 @@ export default function App() {
       <Navbar />
       <main>
         <Hero />
-        <WhatWeDo />
         <Results />
-        <Numbers />
+        <CtaBand where="after-results" title="Want results like Jones?" em="Let's map out your market." sub="A free strategy call: we look at your area, your current lead flow and what a campaign would realistically do for you." />
+        <WhatWeDo />
         <Problem />
         <LiveSystem />
         <Solution />
         <Process />
+        <CtaBand where="after-process" title="First leads in 48 hours." em="It starts with one call." sub="No contracts on the call, no tech setup on your end. If it's not a fit, we'll tell you." />
         <Services />
         <Trust />
         <FAQ />
