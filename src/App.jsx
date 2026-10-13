@@ -22,6 +22,7 @@ const NAV_LINKS = [
   { label: 'Process',  href: '#process' },
   { label: 'Includes', href: '#included' },
   { label: 'FAQ',      href: '#faq' },
+  { label: 'Contact',  href: '#contact' },
 ]
 
 const SERVICES = [
@@ -320,25 +321,27 @@ function Navbar() {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass shadow-lg shadow-black/30' : ''}`}>
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 h-16 flex items-center justify-between">
-          <a href="#home" className="font-display font-bold text-xl tracking-wide text-ink lift-on-hover">
-            CORNERSTONE GROWTH
+      <nav className={`fixed top-3 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-full px-4 sm:px-6 py-1 w-[calc(100%-2rem)] max-w-5xl ${
+        scrolled ? 'glass shadow-lg shadow-black/40' : 'bg-black/30 backdrop-blur-md border border-white/10'
+      }`}>
+        <div className="flex items-center justify-between gap-6">
+          <a href="#home" className="lift-on-hover flex-shrink-0">
+            <img src="/cornerstone_growth_logo.png" alt="Cornerstone Growth" className="h-11 w-auto" />
           </a>
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-7">
             {NAV_LINKS.map(l => (
               <a key={l.label} href={l.href}
-                className="font-body text-sm text-muted hover:text-ink lift-on-hover transition-colors duration-200">
+                className="text-sm font-medium text-white/80 hover:text-white lift-on-hover transition-colors">
                 {l.label}
               </a>
             ))}
           </div>
           <div className="flex items-center gap-3">
-            <a href="#book-call"
-              className="hidden sm:inline-flex magnetic-btn items-center gap-1.5 bg-primary text-white text-sm font-semibold px-5 py-2.5 rounded-sm shadow-lg shadow-primary/20 tracking-wide uppercase">
+            <a href="#contact"
+              className="hidden sm:inline-flex magnetic-btn items-center gap-1.5 bg-primary text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-primary/30 tracking-wide uppercase">
               Get More Jobs <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.5} />
             </a>
-            <button onClick={() => setOpen(true)} className="lg:hidden p-2 text-muted hover:text-ink transition-colors" aria-label="Open menu">
+            <button onClick={() => setOpen(true)} className="lg:hidden p-2 text-white/70 hover:text-white transition-colors" aria-label="Open menu">
               <Menu className="h-5 w-5" />
             </button>
           </div>
@@ -349,7 +352,7 @@ function Navbar() {
       {open && (
         <div className="fixed inset-0 z-[100] bg-deep/97 backdrop-blur-2xl flex flex-col p-6">
           <div className="flex items-center justify-between mb-12">
-            <span className="font-display font-bold text-lg text-white">CORNERSTONE GROWTH</span>
+            <img src="/cornerstone_growth_logo.png" alt="Cornerstone Growth" className="h-8 w-auto" />
             <button onClick={() => setOpen(false)} className="p-2 text-white/50 hover:text-white">
               <X className="h-5 w-5" />
             </button>
@@ -363,7 +366,7 @@ function Navbar() {
             ))}
           </nav>
           <div className="mt-auto">
-            <a href="#book-call" onClick={() => setOpen(false)}
+            <a href="#contact" onClick={() => setOpen(false)}
               className="magnetic-btn inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-4 rounded-sm w-full justify-center shadow-lg shadow-primary/20 uppercase tracking-wide">
               Get More Roofing Jobs <ArrowUpRight className="h-4 w-4" />
             </a>
@@ -426,32 +429,37 @@ function Hero() {
       <div className="absolute top-80 left-20 w-1.5 h-1.5 rounded-full bg-accent/30 animate-float" style={{ animationDelay: '2.2s' }} />
       <div className="absolute top-52 left-48 w-1 h-1 rounded-full bg-primary-light/40 animate-float" style={{ animationDelay: '4s' }} />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-10 pt-28 pb-20 min-h-[100dvh] flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-        {/* Left */}
-        <div className="flex-1">
-          <span className="hero-eyebrow font-mono text-[10px] uppercase tracking-[0.25em] text-primary block mb-6">
-            The Roofing Lead System
-          </span>
-          <h1 className="font-display font-black text-5xl sm:text-7xl lg:text-8xl text-white tracking-tight leading-[0.95] mb-8">
-            <span className="hero-line-1 block">More Qualified</span>
-            <span className="hero-line-2 block">Roofing Jobs.</span>
-            <span className="hero-line-3 block gradient-text">Zero Cold<br className="hidden sm:block" /> Outreach.</span>
-          </h1>
-          <p className="hero-sub font-body text-base sm:text-lg text-white/65 leading-relaxed max-w-lg mb-10">
-            We run targeted Facebook ads and call every new lead back within 30 seconds — so you're always the first roofer they talk to, not the fourth.
-          </p>
-          <div className="hero-cta flex flex-col sm:flex-row gap-3 items-start">
-            <a href="#book-call"
-              className="magnetic-btn btn-shimmer inline-flex items-center gap-2 text-white px-7 py-4 rounded-sm font-semibold shadow-xl shadow-primary/30 text-sm uppercase tracking-wide">
-              See How It Works <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-            </a>
-          </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/60 mt-4">Built for roofing contractors · Facebook ads + AI callback · Exclusive leads</p>
-        </div>
 
-        {/* Right — new lead card */}
-        <div className="hero-card flex-shrink-0">
-          <NewLeadCard />
+      <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-10 pt-24 pb-20 min-h-[100dvh] flex flex-col">
+
+        {/* Content row */}
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16 flex-1">
+          {/* Left */}
+          <div className="flex-1">
+            <span className="hero-eyebrow font-mono text-[10px] uppercase tracking-[0.25em] text-primary block mb-6">
+              The Roofing Lead System
+            </span>
+            <h1 className="font-display font-black text-5xl sm:text-7xl lg:text-8xl text-white tracking-tight leading-[0.95] mb-8">
+              <span className="hero-line-1 block">More Qualified</span>
+              <span className="hero-line-2 block">Roofing Jobs.</span>
+              <span className="hero-line-3 block gradient-text">Zero Cold<br className="hidden sm:block" /> Outreach.</span>
+            </h1>
+            <p className="hero-sub font-body text-base sm:text-lg text-white/65 leading-relaxed max-w-lg mb-10">
+              We run targeted Facebook ads and call every new lead back within 30 seconds — so you're always the first roofer they talk to, not the fourth.
+            </p>
+            <div className="hero-cta flex flex-col sm:flex-row gap-3 items-start">
+              <a href="#contact"
+                className="magnetic-btn btn-shimmer inline-flex items-center gap-2 text-white px-7 py-4 rounded-sm font-semibold shadow-xl shadow-primary/30 text-sm uppercase tracking-wide">
+                See How It Works <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+              </a>
+            </div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/60 mt-4">Built for roofing contractors · Facebook ads + AI callback · Exclusive leads</p>
+          </div>
+
+          {/* Right — new lead card */}
+          <div className="hero-card flex-shrink-0">
+            <NewLeadCard />
+          </div>
         </div>
       </div>
       <LiveFeedTicker />
@@ -716,7 +724,7 @@ function Solution() {
                 })}
               </div>
 
-              <a href="#book-call" className="mt-8 inline-flex items-center gap-2 bg-primary text-white px-5 py-3 rounded-sm font-semibold text-sm shadow-lg shadow-primary/20 uppercase tracking-wide w-full justify-center">
+              <a href="#contact" className="mt-8 inline-flex items-center gap-2 bg-primary text-white px-5 py-3 rounded-sm font-semibold text-sm shadow-lg shadow-primary/20 uppercase tracking-wide w-full justify-center">
                 See How It Works <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
               </a>
             </div>
@@ -862,7 +870,7 @@ function ServicesGrid() {
           <h2 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight text-white max-w-2xl">
             Everything You Need. <span style={{ color: '#2F6FEB' }}>Nothing You Don't.</span>
           </h2>
-          <a href="#book-call"
+          <a href="#contact"
             className="magnetic-btn inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-sm font-semibold text-sm shadow-lg shadow-primary/20 flex-shrink-0 uppercase tracking-wide">
             Get More Roofing Jobs <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
           </a>
@@ -998,7 +1006,7 @@ function FAQ() {
             <p className="text-muted leading-relaxed mb-8" style={{ color: '#64748B' }}>
               No sales deck, no case studies from industries you don't work in. Just honest answers.
             </p>
-            <a href="#book-call"
+            <a href="#contact"
               className="magnetic-btn inline-flex items-center gap-2 bg-primary text-white px-6 py-3.5 rounded-sm font-semibold text-sm shadow-lg shadow-primary/20 uppercase tracking-wide">
               Still have questions? Book a call <ArrowUpRight className="h-4 w-4" />
             </a>
@@ -1121,6 +1129,10 @@ function ContactForm() {
       services: Array.from(form.querySelectorAll('input[name="services"]:checked')).map(cb => cb.value).join(', '),
       message: form.message.value,
     }
+    // Also save the lead into the Cornerstone GHL sub-account and alert Dylan
+    // (api/lead.py). Fire-and-forget: the Web3Forms email below is unchanged.
+    const { access_key: _k, ...lead } = data
+    fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...lead, botcheck: '' }), keepalive: true }).catch(() => {})
     const formData = new FormData()
     Object.entries(data).forEach(([k, v]) => formData.append(k, v ?? ''))
     formData.append('botcheck', '')
@@ -1131,6 +1143,8 @@ function ContactForm() {
       })
       if (res.ok) {
         setStatus('sent')
+        // Vercel Web Analytics conversion event (Analytics tab -> Events)
+        if (window.va) window.va('event', { name: 'Form submitted', data: { form: 'Contact form' } })
         setTimeout(() => {
           window.open('https://calendly.com/dylanwang-cornerstonegrowth/30min', '_blank')
         }, 800)
@@ -1143,7 +1157,7 @@ function ContactForm() {
   }
 
   return (
-    <section id="book-call" className="relative py-24 sm:py-32 lg:py-40 bg-background border-t border-divider overflow-hidden" style={{ backgroundColor: '#06080F', borderTopColor: '#1A2540' }}>
+    <section id="contact" className="relative py-24 sm:py-32 lg:py-40 bg-background border-t border-divider overflow-hidden" style={{ backgroundColor: '#06080F', borderTopColor: '#1A2540' }}>
       <div className="orb w-[500px] h-[500px] animate-float-slower" style={{ background: 'radial-gradient(circle, rgba(47,111,235,0.1) 0%, transparent 65%)', bottom: '-150px', left: '-100px', animationDelay: '2s' }} />
       <div className="max-w-6xl mx-auto px-6 sm:px-10 relative z-10">
         {/* CTA Header */}
@@ -1358,7 +1372,7 @@ function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <div className="font-display font-black text-xl text-white tracking-wide mb-3">CORNERSTONE GROWTH</div>
+            <img src="/cornerstone_growth_logo.png" alt="Cornerstone Growth" className="h-10 w-auto mb-3" />
             <p className="text-sm text-white/50 leading-relaxed max-w-xs mb-5">
               More roofing jobs. Less chasing. Built for owner-operated roofing contractors.
             </p>
@@ -1386,7 +1400,7 @@ function Footer() {
             <ul className="flex flex-col gap-3">
               {[
                 { label: 'How It Works', href: '#process' },
-                { label: 'Get More Jobs',  href: '#book-call' },
+                { label: 'Get More Jobs',  href: '#contact' },
                 { label: 'Privacy Policy', href: '/privacy' },
                 { label: 'Terms of Service', href: '/terms' },
               ].map(l => (
@@ -1401,8 +1415,8 @@ function Footer() {
         <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="font-mono text-[10px] text-white/25">© {new Date().getFullYear()} Cornerstone Growth. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <Link to="/privacy" className="font-mono text-[10px] text-white/25 hover:text-white/60 transition-colors lift-on-hover">Privacy</Link>
-            <Link to="/terms"   className="font-mono text-[10px] text-white/25 hover:text-white/60 transition-colors lift-on-hover">Terms</Link>
+            <Link to="/privacy-policy" className="font-mono text-[10px] text-white/25 hover:text-white/60 transition-colors lift-on-hover">Privacy Policy</Link>
+            <Link to="/terms"          className="font-mono text-[10px] text-white/25 hover:text-white/60 transition-colors lift-on-hover">Terms</Link>
           </div>
         </div>
       </div>
